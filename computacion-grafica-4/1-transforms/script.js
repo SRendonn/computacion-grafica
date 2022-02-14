@@ -1,14 +1,16 @@
-const canvas = document.getElementById('webgl-canvas');
+const canvas = document.getElementById('canvas-webgl');
 const gl = canvas.getContext('webgl');
 
 if (gl) {
   function program() {
-    const positions = [0, -0.75, 0.75, -0.75, -0.5, 0.5];
+    const positions = [0.5, -0.5, -0.5, 0.5];
+    const scale_matrix = [1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1];
     const vertexShaderCode = `
           attribute vec4 a_position;
-          
+          uniform mat4 u_scale_matrix;
+
           void main() {
-              gl_Position = a_position;
+              gl_Position = u_scale_matrix * a_position;
           }
       `;
 
@@ -16,7 +18,7 @@ if (gl) {
           precision mediump float;
           
           void main() {
-              gl_FragColor = vec4(0.75, 0.67, 0, 1.0);
+              gl_FragColor = vec4(0, 0, 0, 1.0);
           }
       `;
 
@@ -44,14 +46,19 @@ if (gl) {
     const positionBuffer = gl.createBuffer();
     gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
     gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(positions), gl.STATIC_DRAW);
+    const scaleMatrixUniformLocation = gl.getUniformLocation(
+      app,
+      'u_scale_matrix'
+    );
+    gl.uniformMatrix4fv(scaleMatrixUniformLocation, false, scale_matrix);
 
-    gl.clearColor(5 / 255, 5 / 255, 15 / 255, 1.0);
+    gl.clearColor(1.0, 1.0, 1.0, 1.0);
     gl.clear(gl.COLOR_BUFFER_BIT);
 
     const positionAttributeLocation = gl.getAttribLocation(app, 'a_position');
     gl.enableVertexAttribArray(positionAttributeLocation);
     gl.vertexAttribPointer(positionAttributeLocation, 2, gl.FLOAT, false, 0, 0);
-    gl.drawArrays(gl.TRIANGLES, 0, 3);
+    gl.drawArrays(gl.LINE_STRIP, 0, 2);
   }
 
   function createShader(gl, type, source) {
