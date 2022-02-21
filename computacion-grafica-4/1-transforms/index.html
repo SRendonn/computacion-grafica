@@ -9,8 +9,86 @@
     <title>WebGL Demo</title>
   </head>
   <body>
-    <canvas id="canvas-webgl" width="800" height="600"
-      >This browser does not support WebGL</canvas
-    >
+    <div style="display: flex; flex-wrap: wrap; justify-content: space-evenly">
+      <div>
+        <h2 style="text-align: center">Original</h2>
+        <canvas id="canvas-webgl-og" width="700" height="450">
+          This browser does not support WebGL
+        </canvas>
+      </div>
+      <div>
+        <h2 style="text-align: center">Transformed</h2>
+        <canvas id="canvas-webgl-transform" width="700" height="450">
+          This browser does not support WebGL
+        </canvas>
+        <div
+          style="display: flex; flex-wrap: wrap; justify-content: space-evenly"
+        >
+          <div>
+            <label for="scaleX" style="display: block">Scale X</label>
+            <input
+              type="range"
+              id="scaleX"
+              value="1"
+              min="0"
+              max="5"
+              step="0.25"
+            />
+          </div>
+          <div>
+            <label for="scaleX" style="display: block">Scale Y</label>
+            <input
+              type="range"
+              id="scaleY"
+              value="1"
+              min="0"
+              max="5"
+              step="0.25"
+            />
+          </div>
+        </div>
+        <div
+          style="display: flex; flex-wrap: wrap; justify-content: space-evenly"
+        >
+          <div>
+            <label for="scaleX" style="display: block">Translate X</label>
+            <input
+              type="range"
+              id="translateX"
+              value="0"
+              min="-1"
+              max="1"
+              step="0.1"
+            />
+          </div>
+          <div>
+            <label for="scaleX" style="display: block">Translate Y</label>
+            <input
+              type="range"
+              id="translateY"
+              value="0"
+              min="-1"
+              max="1"
+              step="0.1"
+            />
+          </div>
+        </div>
+        <div
+          style="display: flex; flex-wrap: wrap; justify-content: space-evenly"
+        >
+          <div>
+            <label for="scaleX" style="display: block">Rotate</label>
+            <input
+              type="range"
+              id="rotate"
+              value="0"
+              min="0"
+              max="360"
+              step="0.1"
+            />
+          </div>
+        </div>
+      </div>
+    </div>
   </body>
 </html>
