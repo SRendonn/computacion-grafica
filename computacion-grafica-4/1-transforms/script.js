@@ -85,9 +85,10 @@ if (glOg && gl) {
           attribute vec4 a_position;
           uniform mat4 u_scale_matrix;
           uniform vec4 u_translate_vec;
+          uniform mat4 u_rotation_matrix;
 
           void main() {
-              gl_Position = u_scale_matrix * a_position + u_translate_vec;
+              gl_Position = (u_scale_matrix * a_position + u_translate_vec) * u_rotation_matrix;
           }
       `;
 
@@ -112,22 +113,51 @@ if (glOg && gl) {
 
     const positionBuffer = gl.createBuffer();
     gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
+    // ? locations
+    const positionAttributeLocation = gl.getAttribLocation(app, 'a_position');
+    const scaleMatrixUniformLocation = gl.getUniformLocation(
+      app,
+      'u_scale_matrix'
+    );
+    const translateVecUniformLocation = gl.getUniformLocation(
+      app,
+      'u_translate_vec'
+    );
+    const rotationMatrixUniformLocation = gl.getUniformLocation(
+      app,
+      'u_rotation_matrix'
+    );
 
     scaleXInput.addEventListener('change', function () {
       uniforms.scale_matrix[0] = Number.parseFloat(scaleXInput.value);
+      gl.uniformMatrix4fv(
+        scaleMatrixUniformLocation,
+        false,
+        uniforms.scale_matrix
+      );
+      renderLoop();
     });
 
     scaleYInput.addEventListener('change', function () {
       uniforms.scale_matrix[5] = Number.parseFloat(scaleYInput.value);
-      console.log(scaleYInput.value);
+      gl.uniformMatrix4fv(
+        scaleMatrixUniformLocation,
+        false,
+        uniforms.scale_matrix
+      );
+      renderLoop();
     });
 
     translateXInput.addEventListener('change', function () {
       uniforms.translate_vec[0] = Number.parseFloat(translateXInput.value);
+      gl.uniform4fv(translateVecUniformLocation, uniforms.translate_vec);
+      renderLoop();
     });
 
     translateYInput.addEventListener('change', function () {
       uniforms.translate_vec[1] = Number.parseFloat(translateYInput.value);
+      gl.uniform4fv(translateVecUniformLocation, uniforms.translate_vec);
+      renderLoop();
     });
 
     rotateInput.addEventListener('change', function () {
@@ -135,37 +165,63 @@ if (glOg && gl) {
       uniforms.rotation_matrix = [
         Math.cos(theta),
         -Math.sin(theta),
+        0,
+        0,
         Math.sin(theta),
         Math.cos(theta),
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
       ];
+      gl.uniformMatrix4fv(
+        rotationMatrixUniformLocation,
+        false,
+        uniforms.rotation_matrix
+      );
+      renderLoop();
     });
 
-    gl.bufferData(
-      gl.ARRAY_BUFFER,
-      new Float32Array(attributes.positions),
-      gl.STATIC_DRAW
-    );
-    const scaleMatrixUniformLocation = gl.getUniformLocation(
-      app,
-      'u_scale_matrix'
-    );
     gl.uniformMatrix4fv(
       scaleMatrixUniformLocation,
       false,
       uniforms.scale_matrix
     );
-    const translateVecUniformLocation = gl.getUniformLocation(
-      app,
-      'u_translate_vec'
+    gl.uniformMatrix4fv(
+      rotationMatrixUniformLocation,
+      false,
+      uniforms.rotation_matrix
     );
     gl.uniform4fv(translateVecUniformLocation, uniforms.translate_vec);
-    gl.clearColor(1.0, 1.0, 1.0, 1.0);
-    gl.clear(gl.COLOR_BUFFER_BIT);
 
-    const positionAttributeLocation = gl.getAttribLocation(app, 'a_position');
-    gl.enableVertexAttribArray(positionAttributeLocation);
-    gl.vertexAttribPointer(positionAttributeLocation, 2, gl.FLOAT, false, 0, 0);
-    gl.drawArrays(gl.LINE_STRIP, 0, 2);
+    function renderLoop() {
+      gl.bufferData(
+        gl.ARRAY_BUFFER,
+        new Float32Array(attributes.positions),
+        gl.STATIC_DRAW
+      );
+      gl.enableVertexAttribArray(positionAttributeLocation);
+      gl.vertexAttribPointer(
+        positionAttributeLocation,
+        2,
+        gl.FLOAT,
+        false,
+        0,
+        0
+      );
+
+      gl.clearColor(1.0, 1.0, 1.0, 1.0);
+      gl.clear(gl.COLOR_BUFFER_BIT);
+      gl.drawArrays(gl.LINE_STRIP, 0, 2);
+    }
+
+    renderLoop();
   }
 
   function createProgram(gl, vertexShader, fragmentShader) {
@@ -197,6 +253,4 @@ if (glOg && gl) {
     programOg();
     programTransform();
   };
-
-  window.requestAnimationFrame(renderLoop);
 }
