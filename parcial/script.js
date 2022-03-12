@@ -1,6 +1,3 @@
-const canvasOg = document.getElementById('canvas-webgl-og');
-const glOg = canvasOg.getContext('webgl2');
-
 const canvas = document.getElementById('canvas-webgl-transform');
 const gl = canvas.getContext('webgl2');
 const scaleXInput = document.getElementById('scaleX');
@@ -9,67 +6,37 @@ const translateXInput = document.getElementById('translateX');
 const translateYInput = document.getElementById('translateY');
 const rotateInput = document.getElementById('rotate');
 const resetButton = document.getElementById('reset');
+const dimensionsForm = document.getElementById('dimensionsForm');
+const inputEvent = new Event('input', { bubbles: false });
+const inputEventBubbles = new Event('input', { bubbles: true });
 
-if (glOg && gl) {
-  function programOg() {
-    const attributes = {
-      positions: [0.5, -0.5, -0.5, 0.5],
-    };
-    const vertexShaderCode = `
-          attribute vec4 a_position;
+if (gl) {
+  function createProgram(gl, vertexShader, fragmentShader) {
+    const app = gl.createProgram();
+    gl.attachShader(app, vertexShader);
+    gl.attachShader(app, fragmentShader);
+    gl.linkProgram(app);
 
-          void main() {
-              gl_Position = a_position;
-          }
-      `;
-
-    const fragmentShaderCode = `
-          precision mediump float;
-          
-          void main() {
-              gl_FragColor = vec4(0, 0, 0, 1.0);
-          }
-      `;
-
-    const vertexShader = createShader(
-      glOg,
-      glOg.VERTEX_SHADER,
-      vertexShaderCode
-    );
-    const fragmentShader = createShader(
-      glOg,
-      glOg.FRAGMENT_SHADER,
-      fragmentShaderCode
-    );
-
-    const app = createProgram(glOg, vertexShader, fragmentShader);
-
-    glOg.useProgram(app);
-
-    const positionBuffer = glOg.createBuffer();
-    glOg.bindBuffer(glOg.ARRAY_BUFFER, positionBuffer);
-    glOg.bufferData(
-      glOg.ARRAY_BUFFER,
-      new Float32Array(attributes.positions),
-      glOg.STATIC_DRAW
-    );
-    glOg.clearColor(1.0, 1.0, 1.0, 1.0);
-    glOg.clear(glOg.COLOR_BUFFER_BIT);
-
-    const positionAttributeLocation = glOg.getAttribLocation(app, 'a_position');
-    glOg.enableVertexAttribArray(positionAttributeLocation);
-    glOg.vertexAttribPointer(
-      positionAttributeLocation,
-      2,
-      glOg.FLOAT,
-      false,
-      0,
-      0
-    );
-    glOg.drawArrays(glOg.LINE_STRIP, 0, 2);
+    if (!gl.getProgramParameter(app, gl.LINK_STATUS)) {
+      console.error(gl.getProgramInfoLog(app));
+      gl.deleteProgram(app);
+      return;
+    }
+    return app;
   }
 
-  function programTransform() {
+  function createShader(gl, type, source) {
+    const shader = gl.createShader(type);
+    gl.shaderSource(shader, source);
+    gl.compileShader(shader);
+
+    const success = gl.getShaderParameter(shader, gl.COMPILE_STATUS);
+    if (success) return shader;
+    console.error(gl.getShaderInfoLog(shader));
+    gl.deleteShader(shader);
+  }
+
+  function setupProgram() {
     const attributes = {
       positions: [0.5, -0.5, -0.5, 0.5],
     };
@@ -130,8 +97,6 @@ if (glOg && gl) {
     );
 
     resetButton.addEventListener('click', function () {
-      const inputEvent = new Event('input', { bubbles: false });
-      const inputEventBubbles = new Event('input', { bubbles: true });
       scaleXInput.value = '1';
       scaleXInput.dispatchEvent(inputEvent);
       scaleYInput.value = '1';
@@ -142,6 +107,25 @@ if (glOg && gl) {
       translateYInput.dispatchEvent(inputEvent);
       rotateInput.value = '0';
       rotateInput.dispatchEvent(inputEventBubbles);
+    });
+
+    dimensionsForm.addEventListener('submit', function (e) {
+      e.preventDefault();
+    });
+
+    canvas.addEventListener('wheel', function (e) {
+      e.preventDefault();
+      const delta = e.deltaY > 0 ? -0.25 : 0.25;
+
+      scaleXInput.value = (
+        Number.parseFloat(scaleXInput.value) + delta
+      ).toString();
+      scaleYInput.value = (
+        Number.parseFloat(scaleYInput.value) + delta
+      ).toString();
+
+      scaleXInput.dispatchEvent(inputEvent);
+      scaleYInput.dispatchEvent(inputEventBubbles);
     });
 
     scaleXInput.addEventListener('input', function (e) {
@@ -265,33 +249,7 @@ if (glOg && gl) {
     renderLoop();
   }
 
-  function createProgram(gl, vertexShader, fragmentShader) {
-    const app = gl.createProgram();
-    gl.attachShader(app, vertexShader);
-    gl.attachShader(app, fragmentShader);
-    gl.linkProgram(app);
-
-    if (!gl.getProgramParameter(app, gl.LINK_STATUS)) {
-      console.error(gl.getProgramInfoLog(app));
-      gl.deleteProgram(app);
-      return;
-    }
-    return app;
-  }
-
-  function createShader(gl, type, source) {
-    const shader = gl.createShader(type);
-    gl.shaderSource(shader, source);
-    gl.compileShader(shader);
-
-    const success = gl.getShaderParameter(shader, gl.COMPILE_STATUS);
-    if (success) return shader;
-    console.error(gl.getShaderInfoLog(shader));
-    gl.deleteShader(shader);
-  }
-
   window.onload = () => {
-    programOg();
-    programTransform();
+    setupProgram();
   };
 }

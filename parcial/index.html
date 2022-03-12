@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="styles.css" />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css?family=Roboto:300,300italic,700,700italic"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.1/normalize.css"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/milligram/1.4.1/milligram.css"
+    />
+    <script defer src="script.js"></script>
+    <title>Parcial Sebastián Rendón | Computación Gráfica</title>
+  </head>
+  <body>
+    <div style="display: flex; flex-wrap: wrap; justify-content: space-evenly">
+      <div style="padding-top: 4rem">
+        <h2>Controls</h2>
+        <div
+          style="
+            display: flex;
+            flex-wrap: wrap;
+            align-items: flex-start;
+            width: 100%;
+          "
+        >
+          <div style="width: 33%">
+            <label for="scaleX" style="display: block">Scale X: 1</label>
+            <span>0</span>
+            <input
+              type="range"
+              id="scaleX"
+              value="1"
+              min="0"
+              max="5"
+              step="0.25"
+            />
+            <span>5</span>
+          </div>
+          <div style="width: 33%">
+            <label for="scaleY" style="display: block">Scale Y: 1</label>
+            <span>0</span>
+            <input
+              type="range"
+              id="scaleY"
+              value="1"
+              min="0"
+              max="5"
+              step="0.25"
+            />
+            <span>5</span>
+          </div>
+          <div style="width: 33%">
+            <label for="translateX" style="display: block"
+              >Translate X: 0</label
+            >
+            <span>-1</span>
+            <input
+              type="range"
+              id="translateX"
+              value="0"
+              min="-1"
+              max="1"
+              step="0.1"
+            />
+            <span>1</span>
+          </div>
+          <div style="width: 33%">
+            <label for="translateY" style="display: block"
+              >Translate Y: 0</label
+            >
+            <span>-1</span>
+            <input
+              type="range"
+              id="translateY"
+              value="0"
+              min="-1"
+              max="1"
+              step="0.1"
+            />
+            <span>1</span>
+          </div>
+          <div style="width: 33%">
+            <label for="rotate" style="display: block">Rotate: 0°</label>
+            <span>0°</span>
+            <input
+              type="range"
+              id="rotate"
+              value="0"
+              min="0"
+              max="360"
+              step="0.1"
+            />
+            <span>360°</span>
+          </div>
+          <div style="width: 33%; padding-top: 2rem">
+            <button id="reset" type="button" class="button">Reset</button>
+          </div>
+        </div>
+        <hr style="border-color: #606c76" />
+        <h2>T-shirt Dimensions</h2>
+        <div
+          style="
+            display: flex;
+            flex-wrap: wrap;
+            align-items: flex-start;
+            width: 100%;
+          "
+        >
+          <form id="dimensionsForm">
+            <div style="width: 50%">
+              <label for="espalda" style="display: block">Espalda</label>
+              <input type="number" id="espalda" />
+            </div>
+            <div style="width: 50%">
+              <label for="ancho" style="display: block">Ancho</label>
+              <input type="number" id="ancho" />
+            </div>
+            <div style="width: 50%">
+              <label for="cadera" style="display: block">Cadera</label>
+              <input type="number" id="cadera" />
+            </div>
+            <div style="width: 50%">
+              <label for="largo" style="display: block">Largo</label>
+              <input type="number" id="largo" />
+            </div>
+            <div style="width: 100%; padding-top: 2rem">
+              <button id="updateDimensions" type="submit" class="button">
+                Submit
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+      <div style="padding-top: 4rem">
+        <h2 style="text-align: center">Drawing</h2>
+        <canvas id="canvas-webgl-transform" width="700" height="450">
+          This browser does not support WebGL
+        </canvas>
+        <p style="text-align: center">
+          También puedes escalar con la rueda del ratón.
+        </p>
+      </div>
+    </div>
+  </body>
+</html>
