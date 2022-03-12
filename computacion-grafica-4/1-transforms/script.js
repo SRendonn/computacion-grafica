@@ -8,6 +8,7 @@ const scaleYInput = document.getElementById('scaleY');
 const translateXInput = document.getElementById('translateX');
 const translateYInput = document.getElementById('translateY');
 const rotateInput = document.getElementById('rotate');
+const resetButton = document.getElementById('reset');
 
 if (glOg && gl) {
   function programOg() {
@@ -88,7 +89,7 @@ if (glOg && gl) {
           uniform mat4 u_rotation_matrix;
 
           void main() {
-              gl_Position = (u_scale_matrix * a_position + u_translate_vec) * u_rotation_matrix;
+              gl_Position = u_scale_matrix * a_position * u_rotation_matrix + u_translate_vec;
           }
       `;
 
@@ -128,39 +129,74 @@ if (glOg && gl) {
       'u_rotation_matrix'
     );
 
-    scaleXInput.addEventListener('change', function () {
+    resetButton.addEventListener('click', function () {
+      const inputEvent = new Event('input', { bubbles: false });
+      const inputEventBubbles = new Event('input');
+      scaleXInput.value = '1';
+      scaleXInput.dispatchEvent(inputEvent);
+      scaleYInput.value = '1';
+      scaleYInput.dispatchEvent(inputEvent);
+      translateXInput.value = '0';
+      translateXInput.dispatchEvent(inputEvent);
+      translateYInput.value = '0';
+      translateYInput.dispatchEvent(inputEvent);
+      rotateInput.value = '0';
+      rotateInput.dispatchEvent(inputEventBubbles);
+    });
+
+    scaleXInput.addEventListener('input', function (e) {
       uniforms.scale_matrix[0] = Number.parseFloat(scaleXInput.value);
       gl.uniformMatrix4fv(
         scaleMatrixUniformLocation,
         false,
         uniforms.scale_matrix
       );
-      renderLoop();
+      document.querySelector(
+        'label[for="scaleX"]'
+      ).innerHTML = `Scale X: ${scaleXInput.value}`;
+      if (e.bubbles) {
+        renderLoop();
+      }
     });
 
-    scaleYInput.addEventListener('change', function () {
+    scaleYInput.addEventListener('input', function (e) {
       uniforms.scale_matrix[5] = Number.parseFloat(scaleYInput.value);
       gl.uniformMatrix4fv(
         scaleMatrixUniformLocation,
         false,
         uniforms.scale_matrix
       );
-      renderLoop();
+      document.querySelector(
+        'label[for="scaleY"]'
+      ).innerHTML = `Scale Y: ${scaleYInput.value}`;
+      if (e.bubbles) {
+        renderLoop();
+      }
     });
 
-    translateXInput.addEventListener('change', function () {
+    translateXInput.addEventListener('input', function (e) {
       uniforms.translate_vec[0] = Number.parseFloat(translateXInput.value);
       gl.uniform4fv(translateVecUniformLocation, uniforms.translate_vec);
-      renderLoop();
+      document.querySelector(
+        'label[for="translateX"]'
+      ).innerHTML = `Translate X: ${translateXInput.value}`;
+      if (e.bubbles) {
+        renderLoop();
+      }
     });
 
-    translateYInput.addEventListener('change', function () {
+    translateYInput.addEventListener('input', function (e) {
       uniforms.translate_vec[1] = Number.parseFloat(translateYInput.value);
       gl.uniform4fv(translateVecUniformLocation, uniforms.translate_vec);
-      renderLoop();
+      document.querySelector(
+        'label[for="translateY"]'
+      ).innerHTML = `Translate Y: ${translateYInput.value}`;
+      if (e.bubbles) {
+        renderLoop();
+      }
     });
 
-    rotateInput.addEventListener('change', function () {
+    rotateInput.addEventListener('input', function (e) {
       const theta = (Number.parseFloat(rotateInput.value) * Math.PI) / 180;
       uniforms.rotation_matrix = [
         Math.cos(theta),
@@ -185,7 +221,12 @@ if (glOg && gl) {
         false,
         uniforms.rotation_matrix
       );
-      renderLoop();
+      document.querySelector(
+        'label[for="rotate"]'
+      ).innerHTML = `Rotate: ${rotateInput.value}°`;
+      if (e.bubbles) {
+        renderLoop();
+      }
     });
 
     gl.uniformMatrix4fv(
