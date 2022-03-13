@@ -52,7 +52,7 @@ if (gl) {
 
   function setupProgram() {
     const attributes = {
-      positions: [-0.2, -0.7, 0, 0.5],
+      positions: [],
     };
 
     const uniforms = {
