@@ -134,18 +134,19 @@ if (gl) {
       const w = Math.max(espalda, ancho, cadera, largo) * 2;
       const normalize = (n) => n / w;
       const centerX = (x, ref) => x - ref / 2;
+      const centerY = (y) => y - largo / 2;
 
-      const caderaPointL = [centerX(0, cadera), 0];
-      const caderaPointR = [centerX(cadera, cadera), 0];
+      const caderaPointL = [centerX(0, cadera), centerY(0)];
+      const caderaPointR = [centerX(cadera, cadera), centerY(0)];
 
       const anchoY = (2 / 3) * largo;
-      const anchoPointL = [centerX(0, ancho), anchoY];
-      const anchoPointR = [centerX(ancho, ancho), anchoY];
+      const anchoPointL = [centerX(0, ancho), centerY(anchoY)];
+      const anchoPointR = [centerX(ancho, ancho), centerY(anchoY)];
 
       const espaldaY = largo * 0.95;
 
-      const espaldaPointL = [centerX(0, espalda), espaldaY];
-      const espaldaPointR = [centerX(espalda, espalda), espaldaY];
+      const espaldaPointL = [centerX(0, espalda), centerY(espaldaY)];
+      const espaldaPointR = [centerX(espalda, espalda), centerY(espaldaY)];
 
       const largoXL = 0.25 * cadera;
       const largoXR = 0.75 * cadera;
@@ -155,7 +156,11 @@ if (gl) {
         0,
         centerX(largoXL, cadera),
       ];
-      const cuelloPointsY = [largo, largo * 0.9, largo];
+      const cuelloPointsY = [
+        centerY(largo),
+        centerY(largo * 0.9),
+        centerY(largo),
+      ];
 
       const cuelloPoints = [];
       for (let t = 0; t <= 1; t = t + 0.1) {
@@ -168,15 +173,15 @@ if (gl) {
       const mangasLength = (1 / 3) * espalda;
       const mangaPointsL = [
         espaldaPointL[0] - mangasLength * Math.cos(Math.PI / 3),
-        espaldaY - mangasLength * Math.sin(Math.PI / 3),
+        centerY(espaldaY - mangasLength * Math.sin(Math.PI / 3)),
         espaldaPointL[0],
-        espaldaY - 2 * mangasLength * Math.sin(Math.PI / 3),
+        centerY(espaldaY - 2 * mangasLength * Math.sin(Math.PI / 3)),
       ];
       const mangaPointsR = [
         espaldaPointR[0],
-        espaldaY - 2 * mangasLength * Math.sin(Math.PI / 3),
+        centerY(espaldaY - 2 * mangasLength * Math.sin(Math.PI / 3)),
         espaldaPointR[0] + mangasLength * Math.cos(Math.PI / 3),
-        espaldaY - mangasLength * Math.sin(Math.PI / 3),
+        centerY(espaldaY - mangasLength * Math.sin(Math.PI / 3)),
       ];
 
       attributes.positions = [
