@@ -36,9 +36,23 @@ if (gl) {
     gl.deleteShader(shader);
   }
 
+  function lerp(t, p1, p2) {
+    return (1 - t) * p1 + t * p2;
+  }
+
+  function reduce(t, p1, p2, ...ps) {
+    if (ps.length) return [lerp(t, p1, p2), ...reduce(t, p2, ...ps)];
+    return [lerp(t, p1, p2)];
+  }
+
+  function deCasteljau(t, ps) {
+    if (ps.length > 1) return deCasteljau(t, reduce(t, ...ps));
+    return ps[0];
+  }
+
   function setupProgram() {
     const attributes = {
-      positions: [0.5, -0.5, -0.5, 0.5],
+      positions: [-0.2, -0.7, 0, 0.5],
     };
 
     const uniforms = {
@@ -111,6 +125,73 @@ if (gl) {
 
     dimensionsForm.addEventListener('submit', function (e) {
       e.preventDefault();
+      const formData = new FormData(dimensionsForm);
+      const espalda = formData.get('espalda');
+      const ancho = formData.get('ancho');
+      const cadera = formData.get('cadera');
+      const largo = formData.get('largo');
+
+      const w = Math.max(espalda, ancho, cadera, largo) * 2;
+      const normalize = (n) => n / w;
+      const centerX = (x, ref) => x - ref / 2;
+
+      const caderaPointL = [centerX(0, cadera), 0];
+      const caderaPointR = [centerX(cadera, cadera), 0];
+
+      const anchoY = (2 / 3) * largo;
+      const anchoPointL = [centerX(0, ancho), anchoY];
+      const anchoPointR = [centerX(ancho, ancho), anchoY];
+
+      const espaldaY = largo * 0.95;
+
+      const espaldaPointL = [centerX(0, espalda), espaldaY];
+      const espaldaPointR = [centerX(espalda, espalda), espaldaY];
+
+      const largoXL = 0.25 * cadera;
+      const largoXR = 0.75 * cadera;
+
+      const cuelloPointsX = [
+        centerX(largoXR, cadera),
+        0,
+        centerX(largoXL, cadera),
+      ];
+      const cuelloPointsY = [largo, largo * 0.9, largo];
+
+      const cuelloPoints = [];
+      for (let t = 0; t <= 1; t = t + 0.1) {
+        const cuelloPointX_t = deCasteljau(t, cuelloPointsX);
+        const cuelloPointY_t = deCasteljau(t, cuelloPointsY);
+
+        cuelloPoints.push(cuelloPointX_t, cuelloPointY_t);
+      }
+
+      const mangasLength = (1 / 3) * espalda;
+      const mangaPointsL = [
+        espaldaPointL[0] - mangasLength * Math.cos(Math.PI / 3),
+        espaldaY - mangasLength * Math.sin(Math.PI / 3),
+        espaldaPointL[0],
+        espaldaY - 2 * mangasLength * Math.sin(Math.PI / 3),
+      ];
+      const mangaPointsR = [
+        espaldaPointR[0],
+        espaldaY - 2 * mangasLength * Math.sin(Math.PI / 3),
+        espaldaPointR[0] + mangasLength * Math.cos(Math.PI / 3),
+        espaldaY - mangasLength * Math.sin(Math.PI / 3),
+      ];
+
+      attributes.positions = [
+        ...caderaPointR,
+        ...anchoPointR,
+        ...mangaPointsR,
+        ...espaldaPointR,
+        ...cuelloPoints,
+        ...espaldaPointL,
+        ...mangaPointsL,
+        ...anchoPointL,
+        ...caderaPointL,
+        ...caderaPointR,
+      ].map(normalize);
+      render();
     });
 
     canvas.addEventListener('wheel', function (e) {
@@ -139,7 +220,7 @@ if (gl) {
         'label[for="scaleX"]'
       ).innerHTML = `Scale X: ${scaleXInput.value}`;
       if (e.bubbles) {
-        renderLoop();
+        render();
       }
     });
 
@@ -154,7 +235,7 @@ if (gl) {
         'label[for="scaleY"]'
       ).innerHTML = `Scale Y: ${scaleYInput.value}`;
       if (e.bubbles) {
-        renderLoop();
+        render();
       }
     });
 
@@ -165,7 +246,7 @@ if (gl) {
         'label[for="translateX"]'
       ).innerHTML = `Translate X: ${translateXInput.value}`;
       if (e.bubbles) {
-        renderLoop();
+        render();
       }
     });
 
@@ -176,7 +257,7 @@ if (gl) {
         'label[for="translateY"]'
       ).innerHTML = `Translate Y: ${translateYInput.value}`;
       if (e.bubbles) {
-        renderLoop();
+        render();
       }
     });
 
@@ -209,7 +290,7 @@ if (gl) {
         'label[for="rotate"]'
       ).innerHTML = `Rotate: ${rotateInput.value}°`;
       if (e.bubbles) {
-        renderLoop();
+        render();
       }
     });
 
@@ -225,7 +306,7 @@ if (gl) {
     );
     gl.uniform4fv(translateVecUniformLocation, uniforms.translate_vec);
 
-    function renderLoop() {
+    function render() {
       gl.bufferData(
         gl.ARRAY_BUFFER,
         new Float32Array(attributes.positions),
@@ -243,10 +324,14 @@ if (gl) {
 
       gl.clearColor(1.0, 1.0, 1.0, 1.0);
       gl.clear(gl.COLOR_BUFFER_BIT);
-      gl.drawArrays(gl.LINE_STRIP, 0, 2);
+      gl.drawArrays(
+        gl.LINE_STRIP,
+        0,
+        Math.floor(attributes.positions.length / 2)
+      );
     }
 
-    renderLoop();
+    render();
   }
 
   window.onload = () => {

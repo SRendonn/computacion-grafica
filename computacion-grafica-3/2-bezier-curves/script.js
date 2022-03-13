@@ -45,8 +45,8 @@ function paintBezierCurve(x, y, spacing) {
   }
 }
 
-const x = [50, 150, 400, 500];
-const y = [300, 100, 110, 300];
+const x = [50, 275, 500];
+const y = [300, 105, 300];
 
 const tRange = document.getElementById('t-range');
 let spacing = tRange.value;
