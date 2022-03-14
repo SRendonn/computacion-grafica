@@ -197,6 +197,7 @@ if (gl) {
         ...caderaPointR,
       ].map(normalize);
       render();
+      canvas.scrollIntoView({ behavior: 'smooth' });
     });
 
     canvas.addEventListener('wheel', function (e) {
