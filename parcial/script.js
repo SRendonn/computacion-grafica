@@ -70,7 +70,7 @@ if (gl) {
           uniform mat4 u_rotation_matrix;
 
           void main() {
-              gl_Position = u_scale_matrix * a_position * u_rotation_matrix + u_translate_vec;
+              gl_Position = u_rotation_matrix * a_position * u_scale_matrix + u_translate_vec;
           }
       `;
 
