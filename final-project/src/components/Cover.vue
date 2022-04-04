@@ -5,7 +5,7 @@
       Here you will see the most important events that defined what computer
       graphics are today.
     </p>
-    <button id="goToMuseumBtn" type="button" @click="$emit('show-museum')">
+    <button id="go-to-museum" type="button" @click="$emit('show-museum')">
       Continue
     </button>
   </div>
@@ -22,7 +22,7 @@
   height: 100%;
 }
 
-#goToMuseumBtn {
+#go-to-museum {
   appearance: none;
   font-family: inherit;
   font-size: medium;
@@ -36,11 +36,11 @@
   transition: all linear 0.15s;
 }
 
-#goToMuseumBtn:hover {
+#go-to-museum:hover {
   background-color: darkviolet;
 }
 
-#goToMuseumBtn:focus {
+#go-to-museum:focus {
   background-color: purple;
 }
 </style>

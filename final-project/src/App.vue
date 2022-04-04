@@ -38,5 +38,7 @@ main {
 .cover-enter-from,
 .cover-leave-to {
   opacity: 0;
+  position: fixed;
+  inset: 0;
 }
 </style>
