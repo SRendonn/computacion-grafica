@@ -1,46 +1,42 @@
 <script setup lang="ts">
-import * as THREE from 'three';
-import { onMounted, ref } from 'vue';
+import Cover from '@/components/Cover.vue';
+import { ref } from 'vue';
+import Museum from './components/Museum.vue';
 
-const scene = new THREE.Scene();
-const camera = new THREE.PerspectiveCamera(
-  75,
-  window.innerWidth / window.innerHeight,
-  0.1,
-  1000
-);
-const renderer = new THREE.WebGLRenderer();
-renderer.setSize(window.innerWidth, window.innerHeight);
-const geometry = new THREE.BoxGeometry();
-const material = new THREE.MeshBasicMaterial({ color: 0x00ff00 });
-const cube = new THREE.Mesh(geometry, material);
-scene.add(cube);
-camera.position.z = 5;
-
-function animate() {
-  requestAnimationFrame(animate);
-  cube.rotation.x += 0.01;
-  cube.rotation.y += 0.01;
-  renderer.render(scene, camera);
-}
-
-const threeWrapper = ref<null | any>(null);
-onMounted(() => {
-  threeWrapper.value.appendChild(renderer.domElement);
-  animate();
-});
+const showMuseum = ref(false);
 </script>
 
 <template>
-  <main ref="threeWrapper"></main>
+  <main>
+    <Transition name="cover">
+      <Cover v-if="!showMuseum" @show-museum="showMuseum = true" />
+      <Museum v-else />
+    </Transition>
+  </main>
 </template>
 
 <style>
+* {
+  box-sizing: border-box;
+}
+
 html,
 body,
-#app {
+#app,
+main {
+  font-family: 'Dosis', sans-serif;
+  margin: 0;
   width: 100%;
   height: 100%;
-  margin: 0;
+}
+
+.cover-enter-active,
+.cover-leave-active {
+  transition: opacity 0.5s ease;
+}
+
+.cover-enter-from,
+.cover-leave-to {
+  opacity: 0;
 }
 </style>
