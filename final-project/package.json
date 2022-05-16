@@ -8,10 +8,12 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "lodash-es": "^4.17.21",
     "three": "^0.139.2",
     "vue": "^3.2.25"
   },
   "devDependencies": {
+    "@types/lodash-es": "^4.17.6",
     "@types/node": "^17.0.23",
     "@types/three": "^0.139.0",
     "@vitejs/plugin-vue": "^2.2.0",
