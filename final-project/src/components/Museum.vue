@@ -9,11 +9,11 @@
       <small>{{ museumItemDescriptions[currentItem].credits }}</small>
     </div>
     <div id="reset-camera-wrapper">
-      <button id="reset-camera" @click="prevItem">
+      <button class="btn" @click="prevItem">
         <chevron-left-icon />
       </button>
-      <button id="reset-camera" @click="resetCamera">Reset camera</button>
-      <button id="reset-camera" @click="nextItem">
+      <button class="btn" @click="resetCamera">Reset camera</button>
+      <button class="btn" @click="nextItem">
         <chevron-right-icon />
       </button>
     </div>
@@ -278,7 +278,7 @@ onUnmounted(() => {
   width: 100%;
 }
 
-#reset-camera {
+.btn {
   appearance: none;
   font-family: inherit;
   font-size: medium;
@@ -292,11 +292,11 @@ onUnmounted(() => {
   transition: all linear 0.15s;
 }
 
-#reset-camera:hover {
+.btn:hover {
   background-color: darkviolet;
 }
 
-#reset-camera:focus {
+.btn:focus {
   background-color: purple;
 }
 </style>
