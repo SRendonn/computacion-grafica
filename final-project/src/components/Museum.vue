@@ -141,7 +141,7 @@ const museumItemDescriptions = ref([
 
 // Scene
 const scene = new THREE.Scene();
-scene.background = new THREE.Color(0xaaaaaa);
+scene.background = new THREE.Color(0x333333);
 
 // Camera
 const initialZ = 5;
