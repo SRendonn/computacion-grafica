@@ -4,7 +4,7 @@ import * as path from 'path'
 
 // https://vitejs.dev/config/
 export default defineConfig({
-  assetsInclude: ['**/*.gltf'],
+  assetsInclude: ['**/*.gltf', '**/*.glb', '**/*.bin', '**/*.dae'],
   plugins: [vue()],
   resolve: {
     alias: {

@@ -1,0 +1,11 @@
+Model Information:
+* title:	Woody from Toy Story
+* source:	https://sketchfab.com/3d-models/woody-from-toy-story-efb6ba2638a645f280af8ab8c1b470cd
+* author:	Qlone (https://sketchfab.com/Qlone)
+
+Model License:
+* license type:	CC-BY-ND-4.0 (http://creativecommons.org/licenses/by-nd/4.0/)
+* requirements:	Author must be credited. Modified versions can not be distributed. Commercial use is allowed.
+
+If you use this 3D model in your project be sure to copy paste this credit wherever you share it:
+This work is based on "Woody from Toy Story" (https://sketchfab.com/3d-models/woody-from-toy-story-efb6ba2638a645f280af8ab8c1b470cd) by Qlone (https://sketchfab.com/Qlone) licensed under CC-BY-ND-4.0 (http://creativecommons.org/licenses/by-nd/4.0/)

@@ -1,0 +1,11 @@
+Model Information:
+* title:	PS2 Slim low poly
+* source:	https://sketchfab.com/3d-models/ps2-slim-low-poly-fc119755cd904498996c2ba1948262d1
+* author:	alexdperdomo (https://sketchfab.com/alexdperdomo)
+
+Model License:
+* license type:	CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
+* requirements:	Author must be credited. Commercial use is allowed.
+
+If you use this 3D model in your project be sure to copy paste this credit wherever you share it:
+This work is based on "PS2 Slim low poly" (https://sketchfab.com/3d-models/ps2-slim-low-poly-fc119755cd904498996c2ba1948262d1) by alexdperdomo (https://sketchfab.com/alexdperdomo) licensed under CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
